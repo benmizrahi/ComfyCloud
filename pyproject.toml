@@ -1,0 +1,14 @@
+[project]
+name = "comfy-cloud-google"
+description = ""
+version = "1.0.0"
+license = { file = "LICENSE" }
+dependencies = ["google-auth"]
+
+[project.urls]
+Repository = "https://github.com/benmizrahi/ComfyCloud"
+
+[tool.comfy]
+PublisherId = "benmizrahi"
+DisplayName = "ComfyCloud"
+Icon = ""
