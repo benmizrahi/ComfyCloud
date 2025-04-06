@@ -3,7 +3,7 @@ import { app } from "/scripts/app.js";
 // Function to trigger the backend action
 async function triggerBackendAction() {
     try {
-        const response = await fetch('/my-button-action', { // Must match the route in __init__.py
+        const response = await fetch('/cloud-handler-action', { // Must match the route in __init__.py
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
