@@ -1,6 +1,7 @@
 import { app } from "/scripts/app.js";
 import { useWorkflowService } from '@/services/workflowService'
 // Function to trigger the backend action
+
 async function triggerBackendAction() {
     try {
         const response = await fetch('/cloud-handler-action', { // Must match the route in __init__.py
