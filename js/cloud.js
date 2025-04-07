@@ -1,6 +1,7 @@
 import { app } from "/scripts/app.js";
-
+import { useWorkflowService } from '@/services/workflowService'
 // Function to trigger the backend action
+
 async function triggerBackendAction() {
     try {
         const response = await fetch('/cloud-handler-action', { // Must match the route in __init__.py
@@ -32,10 +33,12 @@ async function triggerBackendAction() {
 app.registerExtension({
     name: "CloudExtension.Button", // Unique name for the extension
     async setup(appInstance) {
+
+        debugger;
         // Find the menu bar element where buttons like "Queue Prompt" reside
         // The exact selector might change in future ComfyUI versions.
         // Use browser developer tools (F12) to inspect the element if needed.
-        const menuBar = document.querySelector("#comfy-menu-btns"); // A common place
+        const menuBar = document.querySelector(".comfyui-button-group"); // A common place
 
         if (!menuBar) {
             console.error("My Button Extension: Could not find menu bar element (#comfy-menu-btns). Button not added.");
@@ -54,15 +57,18 @@ app.registerExtension({
         myButton.style.borderRadius = "4px";
         myButton.style.cursor = "pointer";
 
+        const workflowService = useWorkflowService();
 
         // Add event listener to the button
         myButton.addEventListener("click", () => {
             console.log("My Custom Button clicked (frontend)");
+            workflowService.exportWorkflow("workflow", "workflow");
             triggerBackendAction(); // Call the function to interact with the backend
         });
 
         // Prepend the button to the menu bar (or append, depending on preference)
         // menuBar.appendChild(myButton); // Adds to the end
+
         menuBar.prepend(myButton); // Adds to the beginning (before Queue Prompt)
 
         console.log("### My Button Extension: Button added to UI.");
