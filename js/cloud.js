@@ -1,8 +1,8 @@
 import { app } from "/scripts/app.js";
-import { useWorkflowService } from '@/services/workflowService'
+// import { useWorkflowService } from '@/services/workflowService'
 // Function to trigger the backend action
 
-async function triggerBackendAction() {
+async function triggerBackendAction(data) {
     try {
         const response = await fetch('/cloud-handler-action', { // Must match the route in __init__.py
             method: 'POST',
@@ -10,7 +10,7 @@ async function triggerBackendAction() {
                 'Content-Type': 'application/json',
             },
             // You could send data in the body if needed:
-            // body: JSON.stringify({ some_data: "value" })
+            body: JSON.stringify({ workflow: data })
         });
 
         if (!response.ok) {
@@ -19,8 +19,6 @@ async function triggerBackendAction() {
 
         const result = await response.json();
         console.log("Backend response:", result);
-        // Optionally, show a success message to the user
-        // app.ui.dialog.show("Action successful!"); // Simple popup
 
     } catch (error) {
         console.error("Error triggering backend action:", error);
@@ -34,7 +32,6 @@ app.registerExtension({
     name: "CloudExtension.Button", // Unique name for the extension
     async setup(appInstance) {
 
-        debugger;
         // Find the menu bar element where buttons like "Queue Prompt" reside
         // The exact selector might change in future ComfyUI versions.
         // Use browser developer tools (F12) to inspect the element if needed.
@@ -57,13 +54,16 @@ app.registerExtension({
         myButton.style.borderRadius = "4px";
         myButton.style.cursor = "pointer";
 
-        const workflowService = useWorkflowService();
+        // const workflowService = useWorkflowService();
 
         // Add event listener to the button
-        myButton.addEventListener("click", () => {
+        myButton.addEventListener("click", async () => {
+            debugger;
             console.log("My Custom Button clicked (frontend)");
-            workflowService.exportWorkflow("workflow", "workflow");
-            triggerBackendAction(); // Call the function to interact with the backend
+            const promptProperty = 'workflow'; // The property you want to send to the backend
+            const p = await appInstance.graphToPrompt()
+            const json = JSON.stringify(p[promptProperty], null, 2)
+            triggerBackendAction(json); // Call the function to interact with the backend
         });
 
         // Prepend the button to the menu bar (or append, depending on preference)

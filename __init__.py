@@ -7,16 +7,18 @@ PromptServer = server.PromptServer.instance
 
 # Define the function that will run when the button is clicked
 async def handle_cloud_action(request):
-    # --- Your Button's Action Goes Here ---
-    print("####################################")
-    print("My Custom Button was clicked!")
-    print("You can trigger any Python code here.")
-    # Example: You could potentially trigger a workflow, modify queues,
-    # interact with files, call other APIs, etc.
-    # --- End of Action ---
+    
+    print("My Cloud Button was clicked!")
+
+    request.json = await request.json()
+    print(request.json)
+    
+    # save the json to file 
+    with open('cloud.json', 'w') as f:
+        f.write(str(request.json))
 
     # Return a response to the frontend (optional, but good practice)
-    return web.json_response({"status": "success", "message": "Button action executed!"})
+    return web.json_response({"status": "success", "message": "Done!"})
 
 # Define a new API route for our button action
 # The route path '/my-button-action' must match the path used in the JavaScript fetch request
